@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">SunsetNotes</string>
+    <string name="note_successfully_saved">Note saved!</string>
+    <string name="note_deleted">Note deleted!</string>
+    <string name="note_edited">Note edited!</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="enter_title_of_note">Enter noteDomain\'s title…</string>
+    <string name="enter_note_subtitle_hint">Введите подзаголовок заметки…</string>
+    <string name="type_note_here_hint">Пишите вашу заметку здесь…</string>
+    <string name="add_voice_enter">Voice record</string>
+    <string name="add_img_label">Add image</string>
+    <string name="sort_by_date_action_label">Sort by date</string>
+    <string name="sort_by_name_action_label">Sort by name</string>
+    <string name="sort_action_label">Sort</string>
+    <string name="search_action_label">Search by notes…</string>
+    <string name="hide_completed_action_label">Hide completed</string>
+    <string name="add_voice_speak_label">You may talk…</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="task_successfully_saved">Todo list saved!</string>
+    <string name="task_edit_label">Edit task</string>
+    <string name="task_add_label">Add task</string>
+    <string name="add_note_label">Add noteDomain</string>
+    <string name="edit_note_label">Edit noteDomain</string>
+    <string name="delete_all_completed_action_label">Delete completed</string>
+    <string name="et_save_task_name">Enter task\'s title…</string>
+    <string name="important_task_check_box_label">Is task important?</string>
+    <string name="notes_label_menu_item">Notes</string>
+    <string name="task_label_menu_item">Tasks</string>
+    <string name="task_name_can_t_be_empty">Имя задачи не может быть пустым</string>
+</resources>

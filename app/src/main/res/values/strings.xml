@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">SunsetNotes</string>
+    <string name="note_successfully_saved">Заметка сохранена!</string>
+    <string name="note_edited">Заметка отредактирована</string>
+    <string name="note_deleted">Заметка удалена!</string>
+    <string name="cancel_label">Отмена</string>
+    <string name="enter_title_of_note">Введите заголовок заметки…</string>
+    <string name="enter_note_subtitle_hint">Введите подзаголовок заметки…</string>
+    <string name="type_note_here_hint">Пишите вашу заметку здесь…</string>
+    <string name="add_voice_enter">Запись голосом</string>
+    <string name="add_img_label">Добавить изображение</string>
+    <string name="sort_by_date_action_label">Сортировать по дате</string>
+    <string name="sort_by_name_action_label">Сортировать по имени</string>
+    <string name="sort_action_label">Сортировать</string>
+    <string name="search_action_label">Поиск по заметкам…</string>
+    <string name="hide_completed_action_label">Спрятать выполненные</string>
+    <string name="add_voice_speak_label">Можете говорить…</string>
+    <string name="task_deleted">Задача удалена</string>
+    <string name="task_successfully_saved">Список дел сохранён</string>
+    <string name="task_edit_label">Редактирование задачи</string>
+    <string name="task_add_label">Добавление задачи</string>
+    <string name="add_note_label">Добавление заметки</string>
+    <string name="edit_note_label">Редактирование заметки</string>
+    <string name="delete_all_completed_action_label">Удалить выполненные</string>
+    <string name="et_save_task_name">Введите заголовок задачи…</string>
+    <string name="important_task_check_box_label">Важная ли задача?</string>
+    <string name="notes_label_menu_item">Заметки</string>
+    <string name="task_label_menu_item">Задачи</string>
+    <string name="task_name_can_t_be_empty">Имя задачи не может быть пустым</string>
+    <string name="note_is_not_existing">Заметки не существует!</string>
+    <string name="fill_all_fields">Заполните все поля!</string>
+</resources>
