@@ -9,11 +9,7 @@ import spiral.bit.dev.sunsetnotesapp.domain.usecases.tasks.interfaces.IGetTasksU
 class GetTasksUseCaseImpl(
     private val taskRepository: ITaskRepository
 ) : IGetTasksUseCase {
-    override fun get(
-        searchQuery: String,
-        sortOrder: SortOrder,
-        hideCompleted: Boolean
-    ): Flow<List<Task>> {
-        return taskRepository.get(searchQuery, sortOrder, hideCompleted)
+    override suspend fun get(query: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>> {
+        return taskRepository.get(query, sortOrder, hideCompleted)
     }
 }

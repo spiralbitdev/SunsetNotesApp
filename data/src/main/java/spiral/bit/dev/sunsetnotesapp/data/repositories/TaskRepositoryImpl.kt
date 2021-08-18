@@ -2,7 +2,8 @@ package spiral.bit.dev.sunsetnotesapp.data.repositories
 
 import kotlinx.coroutines.flow.Flow
 import spiral.bit.dev.sunsetnotesapp.data.db.TaskDao
-import spiral.bit.dev.sunsetnotesapp.data.mappers.toFlowOfTasks
+import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
+import spiral.bit.dev.sunsetnotesapp.data.mappers.toTask
 import spiral.bit.dev.sunsetnotesapp.data.mappers.toTaskEntity
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 import spiral.bit.dev.sunsetnotesapp.domain.models.Task
@@ -29,18 +30,17 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : ITaskRepository {
         taskDao.deleteAllCompletedTasks()
     }
 
-    override fun get(
-        searchQuery: String,
+    override suspend fun get(
+        query: String,
         sortOrder: SortOrder,
         hideCompleted: Boolean
     ): Flow<List<Task>> {
         return when (sortOrder) {
-            SortOrder.BY_NAME -> taskDao.getTasksSortedByName(searchQuery, hideCompleted)
-                .toFlowOfTasks()
+            SortOrder.BY_NAME -> taskDao.getTasksSortedByName(query, hideCompleted).mapItems { it.toTask() }
             SortOrder.BY_DATE -> taskDao.getTasksSortedByDateCreated(
-                searchQuery,
+                query,
                 hideCompleted
-            ).toFlowOfTasks()
+            ).mapItems { it.toTask() }
         }
     }
 }

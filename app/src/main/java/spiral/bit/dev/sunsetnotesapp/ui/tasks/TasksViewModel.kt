@@ -9,12 +9,15 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
+import spiral.bit.dev.sunsetnotesapp.data.mappers.toTask
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.GetPreferenceFlowUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.UpdateSortOrderUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.tasks.implementations.*
 import spiral.bit.dev.sunsetnotesapp.mappers.toFlowOfUITasks
 import spiral.bit.dev.sunsetnotesapp.mappers.toTask
+import spiral.bit.dev.sunsetnotesapp.mappers.toUITask
 import spiral.bit.dev.sunsetnotesapp.models.UITask
 import spiral.bit.dev.sunsetnotesapp.util.ADD_RESULT_OK
 import spiral.bit.dev.sunsetnotesapp.util.EDIT_RESULT_OK
@@ -50,7 +53,7 @@ class TasksViewModel(
 
     val tasksFlow = preferenceFlow.zip(searchQueryFlow) { filterPrefs, query ->
         getTasksUseCaseImpl.get(query, filterPrefs.sortOrder, filterPrefs.hideCompleted)
-            .toFlowOfUITasks()
+            .mapItems { it.toUITask() }
     }.flattenConcat()
 
     fun onTaskSwiped(task: UITask) = viewModelScope.launch {

@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import spiral.bit.dev.sunsetnotesapp.R
+import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
 import spiral.bit.dev.sunsetnotesapp.domain.models.FilterPrefs
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.GetPreferenceFlowUseCaseImpl
@@ -18,8 +18,8 @@ import spiral.bit.dev.sunsetnotesapp.domain.usecases.UpdateSortOrderUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.DeleteNoteUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.GetNotesUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.InsertNoteUseCaseImpl
-import spiral.bit.dev.sunsetnotesapp.mappers.toFlowOfUiNotes
 import spiral.bit.dev.sunsetnotesapp.mappers.toNote
+import spiral.bit.dev.sunsetnotesapp.mappers.toUINote
 import spiral.bit.dev.sunsetnotesapp.models.UINote
 import spiral.bit.dev.sunsetnotesapp.util.ADD_RESULT_OK
 import spiral.bit.dev.sunsetnotesapp.util.DELETE_RESULT_OK
@@ -52,7 +52,7 @@ class NotesViewModel(
     private val searchQueryFlow: StateFlow<String> = _searchQueryFlow
 
     val notesFlow = preferencesFlow.zip(searchQueryFlow) { filterPrefs, query ->
-        getNotesUseCaseImpl.get(query, filterPrefs.sortOrder).toFlowOfUiNotes()
+        getNotesUseCaseImpl.get(query, filterPrefs.sortOrder).mapItems { it.toUINote() }
     }.flattenConcat()
 
     fun onUndoDelete(uiNote: UINote) = viewModelScope.launch {

@@ -1,6 +1,7 @@
 package spiral.bit.dev.sunsetnotesapp.ui.tasks
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -17,6 +18,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -80,8 +82,9 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
     }
 
     private fun setUpObservers() {
-        viewModel.tasksFlow.onEach { tasks -> tasksAdapter.submitList(tasks) }
-            .launchIn(lifecycleScope)
+        viewModel.tasksFlow.onEach { tasks ->
+            tasksAdapter.submitList(tasks)
+        }.launchIn(lifecycleScope)
 
         viewModel.taskEvents.onEach { event ->
             when (event) {

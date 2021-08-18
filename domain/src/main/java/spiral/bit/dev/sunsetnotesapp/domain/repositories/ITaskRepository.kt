@@ -14,5 +14,5 @@ interface ITaskRepository {
 
     suspend fun deleteAllCompletedTasks()
 
-    fun get(searchQuery: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>>
+    suspend fun get(query: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>>
 }

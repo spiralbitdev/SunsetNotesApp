@@ -2,7 +2,8 @@ package spiral.bit.dev.sunsetnotesapp.data.repositories
 
 import kotlinx.coroutines.flow.Flow
 import spiral.bit.dev.sunsetnotesapp.data.db.NoteDao
-import spiral.bit.dev.sunsetnotesapp.data.mappers.toFlowOfNotes
+import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
+import spiral.bit.dev.sunsetnotesapp.data.mappers.toNote
 import spiral.bit.dev.sunsetnotesapp.data.mappers.toNoteEntity
 import spiral.bit.dev.sunsetnotesapp.domain.models.Note
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
@@ -27,8 +28,8 @@ class NotesRepositoryImpl(private val noteDao: NoteDao) : INoteRepository {
 
     override fun get(searchQuery: String, sortOrder: SortOrder): Flow<List<Note>> {
         return when (sortOrder) {
-            SortOrder.BY_NAME -> noteDao.getAllNotesSortedByName(searchQuery).toFlowOfNotes()
-            SortOrder.BY_DATE -> noteDao.getAllNotesSortedByDate(searchQuery).toFlowOfNotes()
+            SortOrder.BY_NAME -> noteDao.getAllNotesSortedByName(searchQuery).mapItems { it.toNote() }
+            SortOrder.BY_DATE -> noteDao.getAllNotesSortedByDate(searchQuery).mapItems { it.toNote() }
         }
     }
 }
