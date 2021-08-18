@@ -48,7 +48,7 @@ val dataModule = module {
                     val app by inject<AppDatabase>()
                     val noteDao = app.noteDao()
                     val taskDao = app.taskDao()
-                    GlobalScope.launch(Dispatchers.IO) {
+                    CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
                         noteDao.run {
                             insert(NoteEntity(title = "Помыть тарелки", subTitle = "Дела по дому"))
                             insert(
