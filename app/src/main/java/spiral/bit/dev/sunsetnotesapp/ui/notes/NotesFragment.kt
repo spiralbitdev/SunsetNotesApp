@@ -16,17 +16,16 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import spiral.bit.dev.sunsetnotesapp.R
 import spiral.bit.dev.sunsetnotesapp.databinding.FragmentNotesBinding
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 import spiral.bit.dev.sunsetnotesapp.models.UINote
+import spiral.bit.dev.sunsetnotesapp.util.action
 import spiral.bit.dev.sunsetnotesapp.util.onQueryTextChanged
-import spiral.bit.dev.sunsetnotesapp.util.showSnackbar
+import spiral.bit.dev.sunsetnotesapp.util.snack
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -40,11 +39,6 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(requireContext(), result)
-        }
 
         setUpViews()
         setUpObservers()
@@ -77,6 +71,12 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
         fabAddNote.setOnClickListener {
             viewModel.onAddNewNoteClicked()
         }
+
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            bundle.getInt("add_edit_result").apply {
+                viewModel.onAddEditResult(this)
+            }
+        }
     }
 
     private fun setUpObservers() {
@@ -87,30 +87,28 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
         viewModel.noteEvents.onEach { events ->
             when (events) {
                 is NotesViewModel.NoteEvents.NavigateToAddNoteScreen -> {
-                    val action =
-                        NotesFragmentDirections.actionNotesFragmentToAddEditNoteFragment(
-                            null, getString(R.string.add_note_label)
-                        )
-                    findNavController().navigate(action)
+                    NotesFragmentDirections.actionNotesFragmentToAddEditNoteFragment(
+                        null, getString(R.string.add_note_label)
+                    ).apply {
+                        findNavController().navigate(this)
+                    }
                 }
                 is NotesViewModel.NoteEvents.NavigateToEditNoteScreen -> {
-                    val action =
-                        NotesFragmentDirections.actionNotesFragmentToAddEditNoteFragment(
-                            events.note, getString(R.string.edit_note_label)
-                        )
-                    findNavController().navigate(action)
+                    NotesFragmentDirections.actionNotesFragmentToAddEditNoteFragment(
+                        events.note, getString(R.string.edit_note_label)
+                    ).apply {
+                        findNavController().navigate(this)
+                    }
                 }
                 is NotesViewModel.NoteEvents.ShowNoteSavedMsg -> {
-                    binding.root.showSnackbar(getString(R.string.note_successfully_saved))
+                    binding.root.snack(R.string.note_successfully_saved)
                 }
                 is NotesViewModel.NoteEvents.ShowUndoDeleteSnackbar -> {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.note_deleted),
-                        Snackbar.LENGTH_SHORT
-                    ).setAction(getString(R.string.cancel_label)) {
-                        viewModel.onUndoDelete(events.note)
-                    }.show()
+                    binding.root.snack(R.string.note_deleted, Snackbar.LENGTH_SHORT) {
+                        action(R.string.cancel_label) {
+                            viewModel.onUndoDelete(events.note)
+                        }
+                    }
                 }
             }
         }.launchIn(lifecycleScope)

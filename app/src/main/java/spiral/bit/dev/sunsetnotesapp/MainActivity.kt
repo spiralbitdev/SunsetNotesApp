@@ -20,14 +20,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setUpNavigation()
+    }
+
+    private fun setUpNavigation() = with(binding) {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
         navController = navHostFragment.findNavController()
 
         AppBarConfiguration(
             setOf(R.id.notesFragment, R.id.tasksFragment)
-        ).also { setupActionBarWithNavController(navController, it) }
-        binding.bottomBar.setupWithNavController(navController)
+        ).also {
+            setupActionBarWithNavController(navController, it)
+        }
+        bottomBar.setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

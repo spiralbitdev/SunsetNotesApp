@@ -13,16 +13,12 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import spiral.bit.dev.sunsetnotesapp.R
 import spiral.bit.dev.sunsetnotesapp.databinding.FragmentAddEditNoteBinding
-import spiral.bit.dev.sunsetnotesapp.util.MIME_TYPE_IMAGE
-import spiral.bit.dev.sunsetnotesapp.util.VoicePicker
-import spiral.bit.dev.sunsetnotesapp.util.hasPermissions
-import spiral.bit.dev.sunsetnotesapp.util.infixLoad
+import spiral.bit.dev.sunsetnotesapp.util.*
 
 class AddEditNoteFragment : Fragment(R.layout.fragment_add_edit_note) {
 
@@ -50,28 +46,31 @@ class AddEditNoteFragment : Fragment(R.layout.fragment_add_edit_note) {
                 imageNote.isVisible = true
                 imgRemoveImage.isVisible = true
                 imageNote infixLoad imageUri.toString()
-            }.also { noteViewModel.imageUri = imageUri.toString() }
+            }.also {
+                noteViewModel.imageUri = imageUri.toString()
+            }
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            inputNoteTitle.setText(noteViewModel.note?.title)
-            inputNote.setText(noteViewModel.note?.contentText)
-            inputNoteSubTitle.setText(noteViewModel.note?.subTitle)
-            textDateTime.text = noteViewModel.note?.createdFormattedDate
-            if (noteViewModel.imageUri.isNotEmpty()) {
-                imageNote.isVisible = true
-                imgRemoveImage.isVisible = true
-                imageNote infixLoad noteViewModel.imageUri
-            } else {
-                imageNote.isVisible = false
-                imgRemoveImage.isVisible = false
-            }
+        setUpViews()
+        setUpListeners()
+        setUpObservers()
+    }
 
-            setUpListeners()
-            setUpObservers()
+    private fun setUpViews() = with(binding) {
+        inputNoteTitle.setText(noteViewModel.note?.title)
+        inputNote.setText(noteViewModel.note?.contentText)
+        inputNoteSubTitle.setText(noteViewModel.note?.subTitle)
+        textDateTime.text = noteViewModel.note?.createdFormattedDate
+        if (noteViewModel.imageUri.isNotEmpty()) {
+            imageNote.isVisible = true
+            imgRemoveImage.isVisible = true
+            imageNote infixLoad noteViewModel.imageUri
+        } else {
+            imageNote.isVisible = false
+            imgRemoveImage.isVisible = false
         }
     }
 
@@ -114,30 +113,30 @@ class AddEditNoteFragment : Fragment(R.layout.fragment_add_edit_note) {
                     setFragmentResult(
                         "add_edit_request",
                         bundleOf("add_edit_result" to event.result)
-                    )
-                    findNavController().popBackStack()
+                    ).apply {
+                        findNavController().popBackStack()
+                    }
                 }
                 is AddEditNoteEvents.ShowInvalidInputMsg -> {
-                    Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG)
-                        .show()
+                    binding.root.snack(event.msg)
                 }
             }
         }.launchIn(lifecycleScope)
     }
 
-    private fun toggleReadMode() {
-        with(binding) {
-            inputNoteSubTitle.isEnabled = !isReadModeEnabled
-            inputNoteTitle.isEnabled = !isReadModeEnabled
-            inputNote.isEnabled = !isReadModeEnabled
-            if (!isReadModeEnabled) imageReadMode.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.colorIcons
-                )
+    private fun toggleReadMode() = with(binding) {
+        inputNoteSubTitle.isEnabled = !isReadModeEnabled
+        inputNoteTitle.isEnabled = !isReadModeEnabled
+        inputNote.isEnabled = !isReadModeEnabled
+        if (!isReadModeEnabled) imageReadMode.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.colorIcons
             )
-            else imageReadMode.setColorFilter(Color.YELLOW)
-        }.also { isReadModeEnabled = !isReadModeEnabled }
+        )
+        else imageReadMode.setColorFilter(Color.YELLOW)
+    }.also {
+        isReadModeEnabled = !isReadModeEnabled
     }
 
     companion object {

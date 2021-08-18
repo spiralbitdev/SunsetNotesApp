@@ -30,13 +30,14 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : ITaskRepository {
         taskDao.deleteAllCompletedTasks()
     }
 
-    override suspend fun get(
+    override fun get(
         query: String,
         sortOrder: SortOrder,
         hideCompleted: Boolean
     ): Flow<List<Task>> {
         return when (sortOrder) {
-            SortOrder.BY_NAME -> taskDao.getTasksSortedByName(query, hideCompleted).mapItems { it.toTask() }
+            SortOrder.BY_NAME -> taskDao.getTasksSortedByName(query, hideCompleted)
+                .mapItems { it.toTask() }
             SortOrder.BY_DATE -> taskDao.getTasksSortedByDateCreated(
                 query,
                 hideCompleted

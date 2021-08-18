@@ -2,6 +2,7 @@ package spiral.bit.dev.sunsetnotesapp
 
 import android.app.Application
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -11,8 +12,10 @@ import spiral.bit.dev.sunsetnotesapp.di.repositoryModule
 import spiral.bit.dev.sunsetnotesapp.di.useCaseModule
 import spiral.bit.dev.sunsetnotesapp.di.viewModelModule
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
 

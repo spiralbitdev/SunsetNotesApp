@@ -10,12 +10,11 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import spiral.bit.dev.sunsetnotesapp.R
 import spiral.bit.dev.sunsetnotesapp.databinding.FragmentAddEditTaskBinding
+import spiral.bit.dev.sunsetnotesapp.util.snack
 
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
@@ -25,20 +24,21 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            editTextTaskName.setText(viewModel.taskName)
-            checkBoxImportant.isChecked = viewModel.taskImportance
-            checkBoxImportant.jumpDrawablesToCurrentState()
-            textViewDateCreated.text = viewModel.task?.createdFormattedTime
-            textViewDateCreated.isVisible = viewModel.task != null
-            textViewDateCreated.text = String.format(
-                "Created: %s",
-                viewModel.task?.createdFormattedTime
-            )
-        }
-
+        setUpViews()
         setUpListeners()
         setUpObservers()
+    }
+
+    private fun setUpViews() = with(binding) {
+        editTextTaskName.setText(viewModel.taskName)
+        checkBoxImportant.isChecked = viewModel.taskImportance
+        checkBoxImportant.jumpDrawablesToCurrentState()
+        textViewDateCreated.text = viewModel.task?.createdFormattedTime
+        textViewDateCreated.isVisible = viewModel.task != null
+        textViewDateCreated.text = String.format(
+            "Created: %s",
+            viewModel.task?.createdFormattedTime
+        )
     }
 
     private fun setUpListeners() = with(binding) {
@@ -51,28 +51,25 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         }
 
         fabSaveTask.setOnClickListener {
-            viewModel.onSaveClick(requireContext())
+            viewModel.onSaveClick()
         }
     }
 
     private fun setUpObservers() = lifecycleScope.launchWhenStarted {
-        viewModel.taskEvents.onEach { event ->
+        viewModel.taskEvents.collect { event ->
             when (event) {
                 is AddEditTaskViewModel.AddEditTaskEvents.NavigateBackWithResult -> {
                     setFragmentResult(
                         "add_edit_request",
                         bundleOf("add_edit_result" to event.result)
-                    )
-                    findNavController().popBackStack()
+                    ).apply {
+                        findNavController().popBackStack()
+                    }
                 }
                 is AddEditTaskViewModel.AddEditTaskEvents.ShowInvalidInputMsg -> {
-                    Snackbar.make(
-                        requireView(),
-                        event.msg,
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    binding.root.snack(event.msg)
                 }
             }
-        }.launchIn(lifecycleScope)
+        }
     }
 }

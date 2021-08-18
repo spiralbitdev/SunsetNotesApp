@@ -1,6 +1,5 @@
 package spiral.bit.dev.sunsetnotesapp.ui.add_edit.tasks
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,12 +35,10 @@ class AddEditTaskViewModel(
             state.set("taskImportance", value)
         }
 
-    fun onSaveClick(context: Context) = viewModelScope.launch {
+    fun onSaveClick() = viewModelScope.launch {
         if (taskName.isBlank()) {
             taskEventsChannel.send(
-                AddEditTaskEvents.ShowInvalidInputMsg(
-                    context.getString(R.string.task_name_can_t_be_empty)
-                )
+                AddEditTaskEvents.ShowInvalidInputMsg(R.string.task_name_can_t_be_empty)
             )
             return@launch
         }
@@ -66,7 +63,7 @@ class AddEditTaskViewModel(
     }
 
     sealed class AddEditTaskEvents {
-        data class ShowInvalidInputMsg(val msg: String) : AddEditTaskEvents()
+        data class ShowInvalidInputMsg(val msg: Int) : AddEditTaskEvents()
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvents()
     }
 }

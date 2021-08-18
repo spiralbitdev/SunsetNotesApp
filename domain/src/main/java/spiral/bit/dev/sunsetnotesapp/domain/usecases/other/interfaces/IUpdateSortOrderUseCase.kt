@@ -1,4 +1,4 @@
-package spiral.bit.dev.sunsetnotesapp.domain.usecases
+package spiral.bit.dev.sunsetnotesapp.domain.usecases.other.interfaces
 
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 

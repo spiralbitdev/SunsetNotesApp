@@ -6,11 +6,11 @@ import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
 
 interface INoteRepository {
 
-    suspend fun insert(note: spiral.bit.dev.sunsetnotesapp.domain.models.Note)
+    suspend fun insert(note: Note)
 
-    suspend fun update(note: spiral.bit.dev.sunsetnotesapp.domain.models.Note)
+    suspend fun update(note: Note)
 
-    suspend fun delete(note: spiral.bit.dev.sunsetnotesapp.domain.models.Note)
+    suspend fun delete(note: Note)
 
-    fun get(searchQuery: String, sortOrder: spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder): Flow<List<spiral.bit.dev.sunsetnotesapp.domain.models.Note>>
+    fun get(searchQuery: String, sortOrder: SortOrder): Flow<List<Note>>
 }

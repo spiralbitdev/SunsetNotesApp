@@ -1,6 +1,5 @@
 package spiral.bit.dev.sunsetnotesapp.ui.notes
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +12,8 @@ import spiral.bit.dev.sunsetnotesapp.R
 import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
 import spiral.bit.dev.sunsetnotesapp.domain.models.FilterPrefs
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
-import spiral.bit.dev.sunsetnotesapp.domain.usecases.GetPreferenceFlowUseCaseImpl
-import spiral.bit.dev.sunsetnotesapp.domain.usecases.UpdateSortOrderUseCaseImpl
+import spiral.bit.dev.sunsetnotesapp.domain.usecases.other.implementations.GetPreferenceFlowUseCaseImpl
+import spiral.bit.dev.sunsetnotesapp.domain.usecases.other.implementations.UpdateSortOrderUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.DeleteNoteUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.GetNotesUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.InsertNoteUseCaseImpl
@@ -72,13 +71,11 @@ class NotesViewModel(
         }
     }
 
-    fun onAddEditResult(context: Context, result: Int) = viewModelScope.launch {
-        with(context) {
-            when (result) {
-                ADD_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(getString(R.string.note_successfully_saved))
-                EDIT_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(getString(R.string.note_edited))
-                DELETE_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(getString(R.string.note_deleted))
-            }
+    fun onAddEditResult(result: Int) = viewModelScope.launch {
+        when (result) {
+            ADD_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(R.string.note_successfully_saved)
+            EDIT_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(R.string.note_edited)
+            DELETE_RESULT_OK -> NoteEvents.ShowNoteSavedMsg(R.string.note_deleted)
         }
     }
 
@@ -91,7 +88,7 @@ class NotesViewModel(
     }
 
     sealed class NoteEvents {
-        data class ShowNoteSavedMsg(val error: String) : NoteEvents()
+        data class ShowNoteSavedMsg(val error: Int) : NoteEvents()
         data class ShowUndoDeleteSnackbar(val note: UINote) : NoteEvents()
         data class NavigateToEditNoteScreen(val note: UINote) : NoteEvents()
         object NavigateToAddNoteScreen : NoteEvents()

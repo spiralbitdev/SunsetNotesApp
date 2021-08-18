@@ -14,14 +14,12 @@ import spiral.bit.dev.sunsetnotesapp.domain.usecases.notes.implementations.Updat
 import spiral.bit.dev.sunsetnotesapp.mappers.toNote
 import spiral.bit.dev.sunsetnotesapp.models.UINote
 import spiral.bit.dev.sunsetnotesapp.util.ADD_RESULT_OK
-import spiral.bit.dev.sunsetnotesapp.util.DELETE_RESULT_OK
 import spiral.bit.dev.sunsetnotesapp.util.UPDATE_RESULT_OK
 import java.util.*
 
 class AddEditNoteViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val insertNoteUseCaseImpl: InsertNoteUseCaseImpl,
-    private val deleteNoteUseCaseImpl: DeleteNoteUseCaseImpl,
     private val updateNoteUseCaseImpl: UpdateNoteUseCaseImpl
 ) : ViewModel() {
 
@@ -83,17 +81,6 @@ class AddEditNoteViewModel(
                 return@async false
             }
         }.await()
-
-    fun onNoteDeleted() = viewModelScope.launch {
-        note?.let {
-            it.toNote().also { note ->
-                deleteNoteUseCaseImpl.delete(note)
-                noteEventsChannel.send(AddEditNoteEvents.NavigateBackWithResult(DELETE_RESULT_OK))
-            }
-        } ?: run {
-            noteEventsChannel.send(AddEditNoteEvents.ShowInvalidInputMsg(R.string.note_is_not_existing))
-        }
-    }
 }
 
 sealed class AddEditNoteEvents {

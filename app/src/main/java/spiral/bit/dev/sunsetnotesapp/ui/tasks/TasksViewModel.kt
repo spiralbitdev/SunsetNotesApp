@@ -10,12 +10,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import spiral.bit.dev.sunsetnotesapp.data.mappers.mapItems
-import spiral.bit.dev.sunsetnotesapp.data.mappers.toTask
 import spiral.bit.dev.sunsetnotesapp.domain.models.SortOrder
-import spiral.bit.dev.sunsetnotesapp.domain.usecases.GetPreferenceFlowUseCaseImpl
-import spiral.bit.dev.sunsetnotesapp.domain.usecases.UpdateSortOrderUseCaseImpl
+import spiral.bit.dev.sunsetnotesapp.domain.usecases.other.implementations.GetPreferenceFlowUseCaseImpl
+import spiral.bit.dev.sunsetnotesapp.domain.usecases.other.implementations.UpdateSortOrderUseCaseImpl
 import spiral.bit.dev.sunsetnotesapp.domain.usecases.tasks.implementations.*
-import spiral.bit.dev.sunsetnotesapp.mappers.toFlowOfUITasks
 import spiral.bit.dev.sunsetnotesapp.mappers.toTask
 import spiral.bit.dev.sunsetnotesapp.mappers.toUITask
 import spiral.bit.dev.sunsetnotesapp.models.UITask
