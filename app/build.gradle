@@ -43,6 +43,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
+
     //Koin
     implementation "io.insert-koin:koin-android:3.1.2"
     implementation "io.insert-koin:koin-core:3.1.2"
@@ -81,6 +82,11 @@ dependencies {
 
     //ViewBinding Delegate
     implementation "com.github.kirich1409:viewbindingpropertydelegate:$viewBindingVersion"
+
+    //Lifecycle api
+    kapt("androidx.lifecycle:lifecycle-compiler:2.4.0-alpha03")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.4.0-alpha03")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03")
 
     // To use only without reflection variants of viewBinding
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$viewBindingVersion"

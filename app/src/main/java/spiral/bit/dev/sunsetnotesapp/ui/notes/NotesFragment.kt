@@ -8,7 +8,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import spiral.bit.dev.sunsetnotesapp.R
@@ -40,8 +39,9 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpViews()
         setUpObservers()
+
+        setUpViews()
         setHasOptionsMenu(true)
     }
 
@@ -82,7 +82,7 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
     private fun setUpObservers() {
         viewModel.notesFlow
             .onEach { notes -> notesAdapter.submitList(notes) }
-            .launchIn(lifecycleScope)
+            .flowWithLifecycle(lifecycle)
 
         viewModel.noteEvents.onEach { events ->
             when (events) {
@@ -111,7 +111,7 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
                     }
                 }
             }
-        }.launchIn(lifecycleScope)
+        }.flowWithLifecycle(lifecycle)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -125,7 +125,7 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
         }
 
         val searchItem = menu.findItem(R.id.action_search)
-        searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
 
         val pendingQuery = viewModel._searchQueryFlow.value
         if (pendingQuery.isNotEmpty()) {
@@ -133,8 +133,8 @@ class NotesFragment : Fragment(R.layout.fragment_notes),
             searchView.setQuery(pendingQuery, false)
         }
 
-        searchView.onQueryTextChanged {
-            viewModel._searchQueryFlow.value = it
+        searchView.onQueryTextChanged { msg ->
+            viewModel._searchQueryFlow.value = msg
         }
     }
 

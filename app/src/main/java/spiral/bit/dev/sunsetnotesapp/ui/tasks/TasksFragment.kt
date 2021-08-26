@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -81,7 +82,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
     private fun setUpObservers() {
         viewModel.tasksFlow.onEach { tasks ->
             tasksAdapter.submitList(tasks)
-        }.launchIn(lifecycleScope)
+        }.flowWithLifecycle(lifecycle)
 
         viewModel.taskEvents.onEach { event ->
             when (event) {
@@ -110,7 +111,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     }
                 }
             }
-        }.launchIn(lifecycleScope)
+        }.flowWithLifecycle(lifecycle)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
